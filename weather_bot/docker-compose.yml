@@ -3,7 +3,7 @@ version: "3.9"
 services:
   db:
     image: postgres
-    container_name: db
+    container_name: weather_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     environment:
@@ -11,10 +11,12 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5439:5432"
+      - "5432:5432"
+    env_file:
+      - .env
 
   web:
-    build: ..
+    build: .
     container_name: weather_bot
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
@@ -27,6 +29,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+    env_file:
+      - .env
 
 volumes:
   postgres_data:
